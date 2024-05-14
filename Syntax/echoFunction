@@ -1,0 +1,9 @@
+function echoFunction(input) {
+    let str = input; 
+
+    console.log(str.length); 
+    console.log(str);
+}
+
+echoFunction('Hello, JavaScript!');
+echoFunction('strings are easy');
