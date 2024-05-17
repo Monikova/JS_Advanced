@@ -1,0 +1,8 @@
+function sumFirstAndLast(inputArr) {
+  let sum = Number(inputArr[0]) + Number(inputArr[inputArr.length - 1]); 
+    
+  return sum;
+}
+
+console.log(sumFirstAndLast(['20', '30', '40']));
+console.log(sumFirstAndLast(['5', '10']));
