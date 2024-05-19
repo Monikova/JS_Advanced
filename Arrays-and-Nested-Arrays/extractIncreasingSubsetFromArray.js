@@ -1,18 +1,31 @@
 function extractIncreasingSubsetFromArray(inputArr) {
+// 2nd working solution 
     let filteredArr = [];
-    let lastBiggestNum = 0;
-    for (let i = 0; i < inputArr.length; i++) {
-        if (i === 0) {
-            lastBiggestNum = inputArr[i]; 
-            filteredArr.push(inputArr[i]);
+    inputArr.reduce((total, num) => {
+        if (!filteredArr.length) {
+            filteredArr.push(num);
         } else {
-            let currNum = inputArr[i];
-            if (currNum >= lastBiggestNum) {
-                filteredArr.push(inputArr[i]);
-                lastBiggestNum = currNum; 
+            if (num >= filteredArr[filteredArr.length - 1]) {
+                filteredArr.push(num);
             }
         }
-    }
+    }, []);
+
+// 1st working solution     
+    // let filteredArr = [];
+    // let lastBiggestNum = 0;
+    // for (let i = 0; i < inputArr.length; i++) {
+    //     if (i === 0) {
+    //         lastBiggestNum = inputArr[i]; 
+    //         filteredArr.push(inputArr[i]);
+    //     } else {
+    //         let currNum = inputArr[i];
+    //         if (currNum >= lastBiggestNum) {
+    //             filteredArr.push(inputArr[i]);
+    //             lastBiggestNum = currNum; 
+    //         }
+    //     }
+    // }
 
     return filteredArr;
 }
