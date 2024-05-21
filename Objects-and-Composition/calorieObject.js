@@ -2,11 +2,7 @@ function calorieObject(inputArr) {
     let obj = {}; 
 
     for (let i = 0; i < inputArr.length; i += 2) {
-            if (!obj.hasOwnProperty(inputArr[i])) {
-                obj[inputArr[i]] = Number(inputArr[i + 1]);
-            } else { 
-                obj[inputArr[i]] += Number(inputArr[i + 1]);
-            }
+         obj[inputArr[i]] = Number(inputArr[i + 1]);
     }
 
     console.log(obj);
