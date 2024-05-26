@@ -1,11 +1,8 @@
 function extractText() {
     const items = document.querySelectorAll("#items li"); 
-    let itemsArr = Array.from(items); 
+    let itemsArr = Array.from(items).map(item => item.textContent); 
     const textArea = document.getElementById('result');
-
-    for (let item of itemsArr) {
-        textArea.value += item.textContent + '\n';
-    }    
+    textArea.value = itemsArr.join('\n');    
 }
 
 extractText();
