@@ -8,5 +8,3 @@ function editElement(ref, match, replacer) {
 
     return elem.textContent = text;
 }
-
-editElement(document.getElementById('e1'), '%insert name here%', 'Document Object Model');
