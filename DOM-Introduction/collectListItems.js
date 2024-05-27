@@ -5,7 +5,6 @@ function extractText() {
     textArea.value = itemsArr.join('\n');    
 }
 
-extractText();
 
 {/* <body>
 <ul id="items">
