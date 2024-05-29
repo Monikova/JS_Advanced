@@ -4,7 +4,7 @@ function toggle() {
     if (buttonStatusElement.textContent === "More") {
         textElement.style.display = 'block';
         buttonStatusElement.textContent = "Less";
-    } else if (buttonStatusElement.textContent === "Less") {
+    } else {
         buttonStatusElement.textContent = "More";
         textElement.style.display = 'none';
     }
