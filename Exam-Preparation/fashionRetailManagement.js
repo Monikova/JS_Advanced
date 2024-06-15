@@ -1,73 +1,60 @@
-// 88/100 in Judge !!!
+// 100/100 in Judge
 
 class FashionRetailInventory {
+    productStock = [];
+
     constructor(storehouse, location) {
         this.storehouse = storehouse;
         this.location = location;
-        this.productStock = [];
     }
 
-    addProduct(productName, size, quantity, price) {
-        if (this.productStock.length === 0) {
-            this.productStock.push({ productName, size, quantity, price });
+    addProduct (productName, size, quantity, price) {
+        let product = this.productStock.find(p => p.productName === productName && p.size === size);
+        if (!product) {
+            this.productStock.push({productName, size, quantity, price});
             return `The product ${productName}, size ${size} was successfully added to the inventory`;
         } else {
-            let isProductFound = false;
-            for (let product of this.productStock) {
-                if (product.productName === productName && product.size === size) {
-                    product.quantity += quantity
-                    isProductFound = true;
-                    return `You added ${quantity} more pieces of product ${productName} size ${size}`;
+            this.productStock = this.productStock.forEach(pr => {
+                if (pr.productName === productName && pr.size === size){
+                    return pr.quantity += quantity;
                 }
-            }
-
-            if (!isProductFound) {
-                this.productStock.push({ productName, size, quantity, price });
-                return `The product ${productName}, size ${size} was successfully added to the inventory`;
-            }
+            })
+            return `You added ${quantity} more pieces of product ${productName} size ${size}`;
         }
     }
-
-    sendProduct(productName, size) {
-        let isProductInStock = false;
-        for (let i = 0; i < this.productStock.length; i++) {
-            if (this.productStock[i].productName === productName && this.productStock[i].size === size) {
-                this.productStock.splice(i, 1);
-                isProductInStock = true;
-                return `The product ${productName}, size ${size} was successfully removed from the inventory`;
-            }
-        }
-
-        if (!isProductInStock) {
+    
+    sendProduct (productName, size) {
+        let product = this.productStock.find(p => p.productName === productName && p.size === size);
+        if (!product) {
             throw new Error(`The product ${productName}, size ${size} is not in the inventory`);
+        } else {
+            this.productStock = this.productStock.filter(pr => pr.productName !== productName && pr.size !== size);
+            return `The product ${productName}, size ${size} was successfully removed from the inventory`;
         }
     }
 
     findProductsBySize(size) {
-        let message = [];
-        for (let product of this.productStock) {
-            if (product.size === size) {
-                message.push(`${product.productName}-${product.quantity} pieces`);
-            }
-        }
-
-        if (!message.length) {
-            return "There are no products available in that size";
+        let oneSizeProducts = this.productStock.filter(pr => pr.size === size);
+        if (!oneSizeProducts.length) {
+            return `There are no products available in that size`;
         } else {
+            let message = [];
+            oneSizeProducts.forEach(pr => message.push(`${pr.productName}-${pr.quantity} pieces`));
             return message.join(", ");
         }
     }
 
-    listProducts() {
-        let message = '';
+    listProducts () {
         if (!this.productStock.length) {
-            message = `${this.storehouse} storehouse is empty`;
+            return `${this.storehouse} storehouse is empty`;
         } else {
-            message = `${this.storehouse} storehouse in ${this.location} available products:\n`;
-            this.productStock.sort((a, b) => a.productName.localeCompare(b.productName)).forEach(pr => message += `${pr.productName}/Size:${pr.size}/Quantity:${pr.quantity}/Price:${pr.price}$\n`);
+            let message = [`${this.storehouse} storehouse in ${this.location} available products:`];
+            let sortedProdicts = this.productStock.sort((a, b) => a.productName.localeCompare(b.productName))
+                             .forEach(pr => message.push(`${pr.productName}/Size:${pr.size}/Quantity:${pr.quantity}/Price:${pr.price}$`));
+            return message.join("\n");
         }
-        return message;
     }
+
 }
 
 
