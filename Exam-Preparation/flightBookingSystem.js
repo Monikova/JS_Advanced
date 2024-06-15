@@ -1,102 +1,73 @@
-// 90/100 in Judge !!!
+// 100/100 in Judge
 
 class FlightBookingSystem {
+    flights = [];
+    bookings = [];
+    bookingsCount = 0; 
+
     constructor(agencyName) {
         this.agencyName = agencyName;
-        this.flights = [];
-        // this.flights = new Set();
-        this.bookings = [];
-        this.bookingsCount = 0;
     }
 
-    addFlight(flightNumber, destination, departureTime, price) {
-        if (!this.flights.length) {
-            this.flights.push({ flightNumber, destination, departureTime, price });
+    addFlight (flightNumber, destination, departureTime, price) {
+        let flight = this.flights.find(fl => fl.flightNumber === flightNumber);
+        if (!flight) {
+            this.flights.push({flightNumber, destination, departureTime, price});
             return `Flight ${flightNumber} to ${destination} has been added to the system.`;
         } else {
-            let flightFound = false;
-            for (let flight of this.flights) {
-                if (flight.flightNumber === flightNumber) {
-                    flightFound = true;
-                    return `Flight ${flightNumber} to ${destination} is already available.`;
-                }
-            }
-
-            if (!flightFound) {
-                this.flights.push({ flightNumber, destination, departureTime, price });
-                return `Flight ${flightNumber} to ${destination} has been added to the system.`;
-            }
+            return `Flight ${flightNumber} to ${destination} is already available.`;
         }
     }
-    // addFlight(flightNumber, destination, departureTime, price) {
-    //     let flight = {flightNumber, destination, departureTime, price};
-    //     if (!this.flights.has(flight)) {
-    //         this.flights.add(flight);
-    //         return `Flight ${flightNumber} to ${destination} has been added to the system.`;
-    //     } else {
-    //         return `Flight ${flightNumber} to ${destination} is already available.`;
-    //     }
-    // }
 
-    bookFlight(passengerName, flightNumber) {
-        let flightFound = false;
-        for (let flight of this.flights) {
-            if (flight.flightNumber === flightNumber) {
-                this.bookingsCount++;
-                this.bookings.push({passengerName, flightNumber, price: flight.price});
-                flightFound = true;
-                return `Booking for passenger ${passengerName} on flight ${flightNumber} is confirmed.`;
-            }
-        }
-
-        if (!flightFound) {
+    bookFlight (passengerName, flightNumber) {
+        let flight = this.flights.find(fl => fl.flightNumber === flightNumber);
+        if (!flight) {
             return `Flight ${flightNumber} is not available for booking.`;
+        } else {
+            this.bookings.push({passengerName, flightNumber, price: flight.price});
+            this.bookingsCount++;
+            return `Booking for passenger ${passengerName} on flight ${flightNumber} is confirmed.`;
         }
     }
 
-    cancelBooking(passengerName, flightNumber) {
-        let bookingFound = false;
-        for (let i = 0; i < this.bookings.length; i++) {
-            let booking = this.bookings[i];
-            if (booking.flightNumber === flightNumber && booking.passengerName === passengerName) {
-                this.bookingsCount--;
-                this.bookings.splice(i, 1);
-                bookingFound = true;
-                return `Booking for passenger ${passengerName} on flight ${flightNumber} is cancelled.`;
-            }
-        }
-
-        if (!bookingFound) {
-            return `Booking for passenger ${passengerName} on flight ${flightNumber} not found.`;
+    cancelBooking (passengerName, flightNumber) {
+        let bookedFlight = this.bookings.find(b => b.passengerName === passengerName && b.flightNumber === b.flightNumber);
+        if (!bookedFlight){
+            throw new Error(`Booking for passenger ${passengerName} on flight ${flightNumber} not found.`);
+        } else {
+            this.bookings = this.bookings.filter(b => b.flightNumber !== flightNumber);
+            this.bookingsCount--;
+            return `Booking for passenger ${passengerName} on flight ${flightNumber} is cancelled.`;
         }
     }
 
-    showBookings(criteria) {
-        let message = '';
+    showBookings (criteria) {
         if (!this.bookings.length) {
             throw new Error('No bookings have been made yet.');
-        } else if (criteria === "all") {
-            message = `All bookings(${this.bookingsCount}):\n`;
-            this.bookings.forEach(b => message += `${b.passengerName} booked for flight ${b.flightNumber}.\n`);
-        } else if (criteria === "cheap") {
-            let cheapFlights = this.bookings.filter(b => b.price <= 100);
-            if (!cheapFlights.length) {
-                message = "No cheap bookings found.";
-            } else {
-                message = "Cheap bookings:\n";
-                cheapFlights.forEach(b => message += `${b.passengerName} booked for flight ${b.flightNumber}.\n`);
-            }
-        } else if (criteria === "expensive"){
-            let expensiveFlights = this.bookings.filter(b => b.price > 100);
-            if (!expensiveFlights.length) {
-                message = "No expensive bookings found.";
-            } else {
-                message = "Expensive bookings:\n";
-                expensiveFlights.forEach(b => message += `${b.passengerName} booked for flight ${b.flightNumber}.\n`);
-            }
         }
 
-        return message.trim();
+        let message = [];
+        if (criteria === "all") {
+            message.push(`All bookings(${this.bookingsCount}):`);
+            this.bookings.forEach(b => message.push(`${b.passengerName} booked for flight ${b.flightNumber}.`));
+        } else if (criteria === "cheap") {
+            let cheapFlights = this.bookings.filter(b => b.price <= 100); 
+            if (!cheapFlights.length) {
+                message.push("No cheap bookings found.");
+            } else {
+                message.push("Cheap bookings:");
+                cheapFlights.forEach(b => message.push(`${b.passengerName} booked for flight ${b.flightNumber}.`));
+            }
+        } else if (criteria === "expensive") {
+            let expensiveFlights = this.bookings.filter(b => b.price > 100);
+            if (!expensiveFlights) {
+                message.push("No expensive bookings found.");
+            } else {
+                message.push("Expensive bookings:");
+                expensiveFlights.forEach(b => message.push(`${b.passengerName} booked for flight ${b.flightNumber}.`));
+            }
+        }
+        return message.join("\n");
     }
 }
 
