@@ -1,74 +1,59 @@
-// 88/100 in Judge !!!
+// 100/100 in Judge
 
 class BookClub {
+    books = [];
+    members = [];
+
     constructor(library) {
         this.library = library;
-        this.books = [];
-        this.members = [];
     }
 
     addBook(title, author) {
-        let isBookInArr = false;
-        for (let book of this.books) {
-            if (book.hasOwnProperty(title)) {
-                isBookInArr = true;
-                return `The book "${title}" by ${author} is already in ${this.library} library.`;
-            }
-        }
-        
-        if (!isBookInArr) {
+        let book = this.books.find(b => b.title === title);
+
+        if (book) {
+            return `The book "${title}" by ${author} is already in ${this.library} library.`;
+        } else {
             this.books.push({title, author});
             return `The book "${title}" by ${author} has been added to ${this.library} library.`;
         }
     }
 
     addMember(memberName) {
-        if (this.members.includes(memberName)) {
-            return `Member ${memberName} is already a part of the book club.`;
-        } else {
-            this.members.push(memberName); 
+        if (!this.members.includes(memberName)) {
+            this.members.push(memberName);
             return `Member ${memberName} has been joined to the book club.`;
+        } else {
+            return `Member ${memberName} is already a part of the book club.`;
         }
     }
 
-    assignBookToMember(memberName, bookTitle) {
+    assignBookToMember (memberName, bookTitle) {
         if (!this.members.includes(memberName)) {
             throw new Error(`Member ${memberName} not found.`);
-        } 
-
-        let isBookInArr = false;
-        let bookIdx;
-        let bookAuthor;
-        for (let i = 0; i < this.books.length; i++) {
-            if (this.books[i].title === bookTitle) {
-                isBookInArr = true;
-                bookIdx = i;
-                bookAuthor = this.books[i].author;
-            }
         }
         
-        if (!isBookInArr) {
+        let book = this.books.find(b => b.title === bookTitle);
+        if (!book) {
             throw new Error(`Book "${bookTitle}" not found.`);
         }
 
-        if (this.members.includes(memberName) && isBookInArr) {
-            let message = `Member ${memberName} has been assigned the book "${bookTitle}" by ${bookAuthor}.`;
-            this.books.splice(bookIdx, 1);
-            return message;
-        }
+        this.books = this.books.filter(b => b.title !== bookTitle);
+        return `Member ${memberName} has been assigned the book "${bookTitle}" by ${book.author}.`;
     }
 
     generateReadingReport() {
-        if (this.members.length === 0) {
-            return 'No members in the book club.';
-        } else if (this.books.length === 0) {
-            return 'No available books in the library.';
+        if (!this.members.length) {
+            return "No members in the book club.";
+        } else if (!this.books.length) {
+            return "No available books in the library.";
         } else {
-            let message = `Available Books in ${this.library} library:\n`;
-            this.books.forEach(b => message += `"${b.title}" by ${b.author}\n`);
-            return message.trim();
+            let message = [`Available Books in ${this.library} library:`];
+            this.books.forEach(b => message.push(`"${b.title}" by ${b.author}`));
+            return message.join("\n");
         }
     }
+
 }
 
 
