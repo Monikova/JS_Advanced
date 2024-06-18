@@ -71,7 +71,21 @@ function solve() {
         return btn;
     }
 
-    function onEdit() {}
+    function onEdit(event) {
+        const parentElem = event.currentTarget.parentElement;
+        const pElements = parentElem.querySelectorAll("p");
+        const [dateAndTime, place, eventArr, email] = Array.from(pElements).map(el => el.textContent.split(": "));
+
+        timeElem.value = dateAndTime[2];
+        dateElem.value = dateAndTime[1].split(" ")[0];
+        placeElem.value = place[1];
+        eventInfoElem.value = eventArr[1];
+        contactsElem.value = email[1];
+
+        event.currentTarget.parentElement.remove();
+
+        toggleBtn(addBtnElem);
+    }
 
     function onContinue() {}
 
