@@ -11,8 +11,12 @@ function solve() {
 
     const ulLastCheckElem = document.getElementById("check-list");
     const ulUpcomingElem = document.getElementById("upcoming-list");
+    const ulFinishedElem = document.getElementById("finished-list");
 
     addBtnElem.addEventListener("click", addOnClick);
+
+    const clearBtnElem = document.getElementById("clear");
+    clearBtnElem.addEventListener("click", onClear);
 
 
     function addOnClick(event) {
@@ -26,25 +30,6 @@ function solve() {
             return;
         }
 
-        // const pDateAndTimeElem = document.createElement("p");
-        // pDateAndTimeElem.textContent = `Begins: ${date} at: ${time}`;
-        // const pPlaceElem = document.createElement("p");
-        // pPlaceElem.textContent = `In: ${place}`;
-        // const pEventElem = document.createElement("p");
-        // pEventElem.textContent = `Event: ${eventInfo}`;
-        // const pContactElem = document.createElement("p");
-        // pContactElem.textContent = `Contact: ${contacts}`;
-
-        // const articleElem = document.createElement("article");
-        // articleElem.appendChild(pDateAndTimeElem);
-        // articleElem.appendChild(pPlaceElem);
-        // articleElem.appendChild(pEventElem);
-        // articleElem.appendChild(pContactElem);
-
-        // const liElem = document.createElement("li");
-        // liElem.classList.add("event-content");
-        // liElem.appendChild(articleElem);
-
         const liElem = createArticleAndLiElements(time, date, place, eventInfo, contacts);
 
         const editBtn = createBtn("edit-btn", "Edit", onEdit);
@@ -53,8 +38,8 @@ function solve() {
         liElem.appendChild(continueBtn);
 
         ulLastCheckElem.appendChild(liElem);
-        
-        
+
+
         clearInputFields(timeElem, dateElem, placeElem, eventInfoElem, contactsElem);
         toggleBtn(addBtnElem);
     }
@@ -82,7 +67,7 @@ function solve() {
 
         return liElem;
     }
-    
+
 
     function clearInputFields(...fields) {
         fields.forEach(f => f.value = "");
@@ -92,9 +77,9 @@ function solve() {
     function toggleBtn(btn) {
         btn.disabled = !btn.disabled;
     }
-    
 
-    function createBtn (classes, text, handler) {
+
+    function createBtn(classes, text, handler) {
         const btn = document.createElement("button");
         btn.classList.add(classes);
         btn.textContent = text;
@@ -130,7 +115,7 @@ function solve() {
         const place = placeArr[1];
         const eventInfo = eventArr[1];
         const contacts = email[1];
-        
+
         const liElem = createArticleAndLiElements(time, date, place, eventInfo, contacts);
 
         const moveBtn = createBtn("finished-btn", "Move to Finished", onMove);
@@ -144,6 +129,17 @@ function solve() {
     }
 
 
-    function onMove() {}
+    function onMove(event) {
+        const elementsToMove = event.currentTarget.parentElement;
+        elementsToMove.removeChild(document.querySelector('button'));
+        ulFinishedElem.appendChild(elementsToMove);
 
+        toggleBtn(addBtnElem)
+    }
+    
+    
+    function onClear(event) {
+        const liELem = event.currentTarget.parentElement.querySelector(".event-content");
+        liELem.remove();
+    }
 }
