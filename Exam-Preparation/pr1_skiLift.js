@@ -13,6 +13,10 @@ function solve() {
     const ticketPreviewUlElem = document.querySelector('ul.ticket-info-list');
     const confirmTicketUlElem = document.querySelector('ul.confirm-ticket');
 
+    const divMainElem = document.getElementById('main');
+    const bodyElem = document.getElementById('body');
+
+
     function onNextStep(event) {
         event.preventDefault();
 
@@ -22,9 +26,9 @@ function solve() {
         const date = dateElem.value;
         const days = daysElem.value;
 
-        // if (!firstName || !lastName || !numberOfPeople || !date || !days) {
-        //     return;
-        // }
+        if (!firstName || !lastName || !numberOfPeople || !date || !days) {
+            return;
+        }
 
         const liElem = createListElem(firstName, lastName, numberOfPeople, date, days);
         const editBtnElem = createBtn('edit-btn', "Edit", onEdit);
@@ -110,7 +114,29 @@ function solve() {
         confirmTicketUlElem.appendChild(elemToMove);
     }
 
-    function onCancel(event) {}
+    function onCancel(event) {
+        event.currentTarget.parentElement.remove();
 
-    function onConfirm(event) {}
+        toggleBtn(nextBtnElem);
+    }
+
+    function onConfirm(event) {
+        divMainElem.remove();
+
+        const h1Elem = document.createElement('h1');
+        h1Elem.setAttribute('id', 'thank-you');
+        h1Elem.textContent = "Thank you, have a nice day! ";
+        bodyElem.appendChild(h1Elem);
+
+        const backbtn = document.createElement('button');
+        // backbtn.setAttribute('id', 'back-btn');
+        backbtn.id = 'back-btn';
+        backbtn.textContent = 'Back ';
+        backbtn.addEventListener('click', onBack);
+        bodyElem.appendChild(backbtn);
+    }
+
+    function onBack(event) {
+        location.reload();
+    }
 }
