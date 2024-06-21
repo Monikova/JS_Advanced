@@ -1,7 +1,6 @@
 window.addEventListener('load', solve);
 
 function solve() {
-    // First Name, Last Name, Number of people, From date, Number of days
     const firstNameElem = document.getElementById('first-name');
     const lastNameElem = document.getElementById('last-name');
     const numberOfPeopleElem = document.getElementById('people-count');
@@ -12,6 +11,7 @@ function solve() {
     nextBtnElem.addEventListener('click', onNextStep);
 
     const ticketPreviewUlElem = document.querySelector('ul.ticket-info-list');
+    const confirmTicketUlElem = document.querySelector('ul.confirm-ticket');
 
     function onNextStep(event) {
         event.preventDefault();
@@ -67,7 +67,6 @@ function solve() {
         return liElem;
     }
 
-
     function createBtn(classes, text, handler) {
         const btn = document.createElement('button');
         btn.classList.add(classes);
@@ -77,7 +76,41 @@ function solve() {
     }
    
 
-    function onEdit() {}
+    function onEdit(event) {
+        const parentElement = event.currentTarget.parentElement;
+        const h3Info = parentElement.querySelector('h3').textContent.split(": ")[1];
+        const firstName = h3Info.split(' ')[0];
+        const lastName = h3Info.split(' ')[1];
+        const pElementsInfo = parentElement.querySelectorAll('p');
+        const [dateInfo, daysInfo, peopleIfo] = Array.from(pElementsInfo).map(p => p.textContent.split(' '));
+        const date = dateInfo[2];
+        const days = daysInfo[1];
+        const people = peopleIfo[1];
 
-    function onContinue() {}
+        firstNameElem.value = firstName;
+        lastNameElem.value = lastName;
+        numberOfPeopleElem.value = people;
+        dateElem.value = date;
+        daysElem.value = days;
+
+        event.currentTarget.parentElement.remove();
+        toggleBtn(nextBtnElem);
+    }
+
+    function onContinue(event) {
+        const elemToMove = event.currentTarget.parentElement;
+        elemToMove.removeChild(document.querySelector('button.edit-btn'));
+        elemToMove.removeChild(document.querySelector('button.continue-btn'));
+        
+        const confirmBtn = createBtn("confirm-btn", 'Confirm', onConfirm);
+        const cancelBtn = createBtn("cancel-btn", 'Cancel', onCancel);
+        elemToMove.appendChild(confirmBtn);
+        elemToMove.appendChild(cancelBtn);
+
+        confirmTicketUlElem.appendChild(elemToMove);
+    }
+
+    function onCancel(event) {}
+
+    function onConfirm(event) {}
 }
